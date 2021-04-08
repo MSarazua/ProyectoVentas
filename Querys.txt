@@ -1,0 +1,27 @@
+use BD_UMG
+
+select * from TB_PERSONA
+
+/Ver tablas/
+select * from TB_PERSONA;
+/Ver tablas/
+
+drop table TB_PERSONA
+
+create table TB_PERSONA(
+ID int not null identity(1,1) primary key,
+NOMBRE varchar(50),
+APELLIDO varchar(50),
+SEXO varchar(50),
+TIPO_PERSONA varchar(50),
+USUARIO varchar(50),
+PASS varchar(50)
+);
+
+/Ver tablas/
+select * from TB_PERSONA;
+/Ver tablas/
+
+/Querys/
+INSERT  INTO TB_PERSONA(NOMBRE,APELLIDO,SEXO,TIPO_PERSONA,USUARIO,PASS) VALUES ('María', 'Sarazúa', 'F', 'Admin', 'Msarazua', '123')
+/Querys/

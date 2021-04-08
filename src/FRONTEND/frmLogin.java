@@ -125,7 +125,7 @@ public class frmLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        frmIngreso F = new frmIngreso();
+        frmVerUser F = new frmVerUser();
         Vendedor V = new Vendedor();
         clsQuerys objVerificacion = new clsQuerys();
         String pass = ""; 
