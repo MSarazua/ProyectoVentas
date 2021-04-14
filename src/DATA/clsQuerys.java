@@ -6,6 +6,7 @@
 package DATA;
 
 import BACKEND.clsProducto;
+import BACKEND.clsVenta;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +20,7 @@ public class clsQuerys {
 
     public clsQuerys() {
     }
-    //Metodos
+    //Metodos login
     public int fncLogin(String pUsuario, String pPass){
         int Resp = 0;
         try{
@@ -68,6 +69,7 @@ public class clsQuerys {
         return Resp;
     }
     
+    //Métodos crud de productos
      public int fncIngresoProducto( String prNombre, String prDescripcion, int prCantidad, double prPrecio, String prEstatus){
         int retorno=0; 
         try{
@@ -166,4 +168,27 @@ public class clsQuerys {
         }
         return Resp;
     }  
+    
+    //Métodos sobre ventas
+    public int RegistrarVenta(clsVenta v){
+        PreparedStatement ps;
+        int r = 0;
+        try {
+        Connection Con = clsConexion.getConexion(); 
+        String sql = "INSERT INTO TB_VENTA (FECHA, NIT, NOMBRE, DIRECCION, MONTO_TOTAL, CANTIDAD_PRODUCTOS, ESTATUS) VALUES (?,?,?,?,?,?,?)";
+        ps = Con.prepareStatement(sql);
+        
+        ps.setString(1, v.getFECHA());
+        ps.setString(2, v.getNIT());
+        ps.setString(3, v.getNOMBRE());
+        ps.setString(4, v.getDIRECCION());
+        ps.setInt(5, v.getMONTO_TOTAL());
+        ps.setInt(6, v.getCANTIDAD_PRODUCTOS());
+        ps.setString(7, v.getESTATUS());
+        ps.execute();
+        }catch (SQLException e){
+            System.out.println(e.toString());
+        }
+        return r;
+    }
 }
