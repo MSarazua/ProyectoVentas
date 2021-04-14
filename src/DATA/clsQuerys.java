@@ -24,7 +24,7 @@ public class clsQuerys {
         int Resp = 0;
         try{
             Statement sql = clsConexion.getConexion().createStatement();
-            String Query = "SELECT Usuario FROM TB_PERSONA WHERE Usuario = '" +  pUsuario 
+            String Query = "SELECT USUARIO FROM TB_PERSONA WHERE USUARIO = '" +  pUsuario 
                     + "'AND PASS = '" + pPass + "';";
             System.out.println(Query);
             ResultSet resultado = sql.executeQuery(Query);
