@@ -5,14 +5,18 @@
  */
 package FRONTEND;
 
+import BACKEND.clsDetalle;
+import BACKEND.clsProducto;
 import BACKEND.clsVenta;
 import DATA.clsQuerys;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JTable;
+import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
+import java.lang.Object;
+import javax.swing.table.AbstractTableModel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -22,7 +26,11 @@ import java.util.Date;
 public class frmVenta extends javax.swing.JFrame {
     clsVenta v = new clsVenta();
     clsQuerys q = new clsQuerys();
-
+    clsProducto pro = new clsProducto();
+    DefaultTableModel modelo = new DefaultTableModel();
+    clsDetalle Dv = new clsDetalle();
+    int item;
+    double Totalpagar = 0.00;
     /**
      * Creates new form frmVenta
      */
@@ -37,7 +45,7 @@ public class frmVenta extends javax.swing.JFrame {
         String NIT = ctNit.getText();
         String NOMBRE = ctNombre.getText();
         String DIRECCION = ctDireccion.getText();
-        int MONTO_TOTAL = (Integer.valueOf(total.getText()));
+        double MONTO_TOTAL = (Double.valueOf(total.getText()));
         int CANTIDAD_PRODUCTOS = (Integer.valueOf(ctCantidad.getText()));
         String ESTATUS = ctStatus.getText();
         
@@ -51,6 +59,19 @@ public class frmVenta extends javax.swing.JFrame {
         q.RegistrarVenta(v);
     }
 
+    private void RegistrarDetalle(){
+        for (int i = 0; i < TableVentas.getRowCount(); i++){
+            int cod = (int) TableVentas.getValueAt(i,0);
+            int cant = Integer.parseInt(TableVentas.getValueAt(i, 2).toString());
+            double precio = Double.parseDouble(TableVentas.getValueAt(i, 3).toString());
+            int id = 1;
+            Dv.setCOD_PRODUTO(cod);
+            Dv.setCANTIDAD(cant);
+            Dv.setPRECIO(precio);
+            Dv.setFACTURA(id);
+            q.RegistrarDetalle(Dv);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -66,8 +87,6 @@ public class frmVenta extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         btnGuardar = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -85,6 +104,10 @@ public class frmVenta extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        ctStock = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TableVentas = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(987, 824));
@@ -125,19 +148,6 @@ public class frmVenta extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel4.setText("PRECIO");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/guardar.png"))); // NOI18N
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,17 +161,27 @@ public class frmVenta extends javax.swing.JFrame {
         jLabel7.setText("Total a pagar: ");
 
         ctCodigo.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        ctCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ctCodigoKeyPressed(evt);
+            }
+        });
 
         ctDesc.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
 
         ctCantidad.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        ctCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ctCantidadKeyPressed(evt);
+            }
+        });
 
         ctPreciio.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
 
         fechas.setText("FECHA");
 
         total.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
-        total.setText("5");
+        total.setText("0");
 
         jLabel8.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel8.setText("NIT");
@@ -175,6 +195,35 @@ public class frmVenta extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
         jLabel11.setText("ESTATUS");
 
+        jLabel12.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        jLabel12.setText("Stock");
+
+        ctStock.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+
+        TableVentas.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
+        TableVentas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "Descripción", "Cantidad", "Precio", "SubTotal"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TableVentas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TableVentasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TableVentas);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,29 +236,6 @@ public class frmVenta extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(158, 158, 158)
-                                .addComponent(jLabel2)
-                                .addGap(104, 104, 104)
-                                .addComponent(jLabel3))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(ctCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(ctDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(ctCantidad)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(49, 49, 49)
-                                .addComponent(jLabel4))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(ctPreciio, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -236,7 +262,38 @@ public class frmVenta extends javax.swing.JFrame {
                                     .addComponent(jLabel11)
                                     .addComponent(ctStatus))))
                         .addGap(110, 110, 110)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(158, 158, 158)
+                                        .addComponent(jLabel2)
+                                        .addGap(104, 104, 104)
+                                        .addComponent(jLabel3))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(ctCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(ctDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(ctCantidad)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(49, 49, 49)
+                                        .addComponent(jLabel4))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(ctPreciio, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(31, 31, 31)
+                                        .addComponent(jLabel12))
+                                    .addComponent(ctStock, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 881, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -246,24 +303,30 @@ public class frmVenta extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fechas)
                 .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ctCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ctDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ctCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ctPreciio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ctCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ctDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ctCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ctPreciio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ctStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addGap(40, 40, 40))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
@@ -277,17 +340,13 @@ public class frmVenta extends javax.swing.JFrame {
                                 .addComponent(ctNit, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(ctDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(ctNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel5)
-                                .addGap(30, 30, 30))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel7)
-                                    .addComponent(total))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel7)
+                                .addComponent(total)))))
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -296,7 +355,82 @@ public class frmVenta extends javax.swing.JFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
         RegistrarVenta();
+        RegistrarDetalle();
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void ctCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ctCodigoKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            if(!"".equals(ctCodigo.getText())){
+                int COD_PRODUTO = (Integer.valueOf(ctCodigo.getText()));
+                pro = q.BuscarPro(COD_PRODUTO);
+                if(pro.getNombre() != null){
+                    ctDesc.setText(""+pro.getNombre());
+                    ctPreciio.setText(""+pro.getPrecio());
+                    ctStock.setText(""+pro.getCantidad());
+                    ctCantidad.requestFocus();
+                }else{
+                    ctDesc.setText("");
+                    ctPreciio.setText("");
+                    ctStock.setText("");
+                    ctCodigo.requestFocus();
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Ingrese el código del producto");
+                ctCodigo.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_ctCodigoKeyPressed
+
+    private void ctCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ctCantidadKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            if(!"".equals(ctCantidad.getText())){
+                int COD_PRODUTO = (Integer.valueOf(ctCodigo.getText()));
+                String descripcion = ctDesc.getText();
+                int cant = (Integer.parseInt(ctCantidad.getText()));
+                double precio = Double.parseDouble(ctPreciio.getText());
+                double total = cant * precio;
+                int stock = (Integer.parseInt(ctStock.getText()));
+                if(stock >= cant){
+                    item = item + 1; 
+                    modelo = (DefaultTableModel) TableVentas.getModel();
+                    item = item + 1; 
+                    modelo = (DefaultTableModel) TableVentas.getModel();
+                    for(int i = 0; i < TableVentas.getRowCount(); i++){
+                        if(TableVentas.getValueAt(i, 1).equals(ctDesc.getText())){
+                            JOptionPane.showMessageDialog(null, "El producto ya ha sido ingresado");
+                            return;
+                        }
+                    }
+                    ArrayList lista = new ArrayList();
+                    lista.add(item);
+                    lista.add(COD_PRODUTO);
+                    lista.add(descripcion);
+                    lista.add(cant);
+                    lista.add(precio);
+                    lista.add(total);
+                    Object[] O = new Object[5];
+                    O[0] = lista.get(1);
+                    O[1] = lista.get(2);
+                    O[2] = lista.get(3);
+                    O[3] = lista.get(4);
+                    O[4] = lista.get(5);
+                    modelo.addRow(O);
+                    TableVentas.setModel(modelo);
+                    TotalPagar();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Stock no disponible");
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Ingrese cantidad");
+            }
+        }
+    }//GEN-LAST:event_ctCantidadKeyPressed
+
+    private void TableVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableVentasMouseClicked
+
+    }//GEN-LAST:event_TableVentasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -334,6 +468,7 @@ public class frmVenta extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TableVentas;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JTextField ctCantidad;
     private javax.swing.JTextField ctCodigo;
@@ -343,10 +478,12 @@ public class frmVenta extends javax.swing.JFrame {
     private javax.swing.JTextField ctNombre;
     private javax.swing.JTextField ctPreciio;
     private javax.swing.JTextField ctStatus;
+    private javax.swing.JTextField ctStock;
     private javax.swing.JLabel fechas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -357,7 +494,16 @@ public class frmVenta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel total;
     // End of variables declaration//GEN-END:variables
+    
+    private void TotalPagar(){
+        Totalpagar = 0.00;
+        int numFila = TableVentas.getRowCount();
+        for (int i = 0; i < numFila; i++){
+            double cal = Double.parseDouble(String.valueOf(TableVentas.getModel().getValueAt(i, 4)));
+            Totalpagar = (Totalpagar + cal);
+        }
+        total.setText(String.valueOf(Totalpagar));
+    }
 }
