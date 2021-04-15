@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package DATA;
-
+import BACKEND.clsPersonas;
 import BACKEND.clsProducto;
 import BACKEND.clsVenta;
 import java.sql.Connection;
@@ -191,4 +191,70 @@ public class clsQuerys {
         }
         return r;
     }
+    
+    
+    //MODIFICACION
+    public int fncModificaPersona( clsPersonas objPersona){
+        int Resp=0; // 0 no se ingreso.
+        try{
+            Connection Con = clsConexion.getConexion();  //CONEXION A BD
+            String consulta = "UPDATE TB_PERSONA SET NOMBRE = ?,APELLIDO = ?,SEXO = ?,TIPO_PERSONA = ?,USUARIO = ?,PASS = ? WHERE ID = ?";
+            PreparedStatement ps = Con.prepareStatement(consulta);
+            ps.setString(1, objPersona.getNOMBRE());
+            ps.setString(2, objPersona.getAPELLIDO());
+            ps.setString(3, objPersona.getSEXO());
+            ps.setInt(4, objPersona.getTIPO_PERSONA());  
+            ps.setString(5, objPersona.getUsuario());
+            ps.setString(6, objPersona.getPass());
+            ps.setInt(7, objPersona.getCODIGO());
+       
+            
+            
+            ps.executeUpdate(); //EJECUTA LA SENTENCIA EN LA BASE DE DATOS
+            Resp = 1;
+            
+        }catch(SQLException Ex){
+            System.out.println(Ex.getMessage());
+        }
+        return Resp;
+    }
+    
+    public int fncEliminaPersona(int pCodigo){
+        int Resp=0; // 0 no se ingreso.
+        try{
+            Connection Con = clsConexion.getConexion();  //CONEXION A BD
+            String consulta = "DELETE FROM TB_PERSONA WHERE ID = " + pCodigo;
+            PreparedStatement ps = Con.prepareStatement(consulta);
+                 
+            ps.executeUpdate(); //EJECUTA LA SENTENCIA EN LA BASE DE DATOS
+            Resp = 1;
+            
+        }catch(SQLException Ex){
+            System.out.println(Ex.getMessage());
+        }
+        return Resp;
+    }
+    
+    public ResultSet fncConsultaPersona(int pCodigo){
+        ResultSet rs = null;
+        try{
+            Connection Con = clsConexion.getConexion();  //CONEXION
+            String consulta = "SELECT ID, NOMBRE, APELLIDO, SEXO, TIPO_PERSONA, USUARIO FROM TB_PERSONA";
+            if(pCodigo != 0){
+                consulta = consulta + " WHERE ID =" + pCodigo;
+            }
+            PreparedStatement ps = Con.prepareStatement(consulta);
+            rs = ps.executeQuery();
+            
+            
+        }catch(SQLException Ex){
+            System.out.println(Ex.getMessage());
+        } 
+        
+        
+        return rs;
+    }
+    
+    
+    
 }

@@ -51,6 +51,7 @@ public class frmIngreso extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         bMas = new javax.swing.JRadioButton();
         bFem = new javax.swing.JRadioButton();
+        btnVerUser = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -121,6 +122,15 @@ public class frmIngreso extends javax.swing.JFrame {
         bFem.setForeground(new java.awt.Color(255, 255, 255));
         bFem.setText("Femenino");
 
+        btnVerUser.setBackground(new java.awt.Color(51, 153, 255));
+        btnVerUser.setFont(new java.awt.Font("Verdana", 1, 11)); // NOI18N
+        btnVerUser.setText("Ver Usuarios");
+        btnVerUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerUserActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -144,6 +154,8 @@ public class frmIngreso extends javax.swing.JFrame {
                                     .addComponent(bFem, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(102, 102, 102)
+                                    .addComponent(btnVerUser, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(ctNombre, javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,7 +205,8 @@ public class frmIngreso extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(btnVerUser))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -213,6 +226,7 @@ public class frmIngreso extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        frmIngreso f = new frmIngreso();
         int tipo = 0 ;
         String tp = "";
         String pass = "";
@@ -220,10 +234,9 @@ public class frmIngreso extends javax.swing.JFrame {
         for (int i= 0; i<password.length ; i++ ){
             pass += password[i];
         }
-        clsQuerys objVerificacion = new clsQuerys();
-        if (bMas.isSelected()==true && bFem.isSelected()==false){
-            char radiobt ='M';
-            tp = sTipo.getSelectedItem().toString();
+        
+        
+        tp = sTipo.getSelectedItem().toString();
 
             if( "Administrador".equals(tp)){
                 tipo = 1;
@@ -232,6 +245,17 @@ public class frmIngreso extends javax.swing.JFrame {
             if( "Vendedor".equals(tp)){
                 tipo = 2;
             }
+            
+        clsQuerys objVerificacion = new clsQuerys();
+        if (bMas.isSelected()==true && bFem.isSelected()==false){
+            char radiobt ='M';
+            
+             
+                
+                
+                
+                
+                
 
             if(objVerificacion.fncIngresoPersona(ctNombre.getText(), ctApellido.getText(), radiobt,tipo,ctUsuario.getText(), pass) == 2){
                 JOptionPane.showMessageDialog(this, "Ingreso Correcto de Persona");
@@ -239,6 +263,8 @@ public class frmIngreso extends javax.swing.JFrame {
                 ctApellido.setText("");
                 ctUsuario.setText("");
                 ctPass1.setText("");
+                f.setVisible(true);
+                this.setVisible(false);
 
             }else{
 
@@ -249,23 +275,16 @@ public class frmIngreso extends javax.swing.JFrame {
             if(bFem.isSelected()==true && bMas.isSelected()==false){
                 char radiobt ='F';
 
-                tp = sTipo.getSelectedItem().toString();
-                if( "Estudiante".equals(tp)){
-                    tipo = 1;
-                }
-                if( "Profesor".equals(tp))
-                {
-                    tipo = 2;
-                }
-                if( "Empleado".equals(tp)){
-                    tipo = 3;
-                }
+               
                 if(objVerificacion.fncIngresoPersona(ctNombre.getText(), ctApellido.getText(), radiobt,tipo,ctUsuario.getText(), pass) ==2){
                     JOptionPane.showMessageDialog(this, "Registro exitoso");
                     ctNombre.setText("");
                     ctApellido.setText("");
                     ctUsuario.setText("");
                     ctPass1.setText("");
+                    f.setVisible(true);
+                    this.setVisible(false);
+       
                 }else{
                     JOptionPane.showMessageDialog(this, "¡Error!");
                 }
@@ -287,6 +306,13 @@ public class frmIngreso extends javax.swing.JFrame {
     private void bMasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bMasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_bMasActionPerformed
+
+    private void btnVerUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerUserActionPerformed
+        // TODO add your handling code here:
+        frmVerUser f = new frmVerUser();
+        f.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnVerUserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -326,6 +352,7 @@ public class frmIngreso extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton bFem;
     private javax.swing.JRadioButton bMas;
+    private javax.swing.JButton btnVerUser;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField ctApellido;
     private javax.swing.JTextField ctNombre;
