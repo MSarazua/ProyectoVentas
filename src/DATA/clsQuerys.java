@@ -5,6 +5,7 @@
  */
 package DATA;
 
+import BACKEND.clsDetalle;
 import BACKEND.clsProducto;
 import BACKEND.clsVenta;
 import java.sql.Connection;
@@ -70,7 +71,7 @@ public class clsQuerys {
     }
     
     //Métodos crud de productos
-     public int fncIngresoProducto( String prNombre, String prDescripcion, int prCantidad, double prPrecio, String prEstatus){
+    public int fncIngresoProducto( String prNombre, String prDescripcion, int prCantidad, double prPrecio, String prEstatus){
         int retorno=0; 
         try{
             Connection Con = clsConexion.getConexion();
@@ -89,7 +90,7 @@ public class clsQuerys {
         }
         return retorno;
     }
-     public int fncIngresoProducto2( clsProducto objProducto  ){
+    public int fncIngresoProducto2( clsProducto objProducto  ){
         int retorno=0; 
         try{
             Connection Con = clsConexion.getConexion();
@@ -109,7 +110,6 @@ public class clsQuerys {
         }
         return retorno;
     }
-     
     public ResultSet fncConsultaInventario(int cod){
         ResultSet rs = null;
         try{
@@ -129,8 +129,7 @@ public class clsQuerys {
         
         return rs;
     }
-    
-      public int fncEliminar(int COD){
+    public int fncEliminar(int COD){
         int Resp=0; 
         try{
             Connection Con = clsConexion.getConexion(); 
@@ -144,7 +143,6 @@ public class clsQuerys {
         }
         return Resp;
     }
-      
     public int fncModificar( clsProducto objProducto){
         int Resp=0; // 0 no se ingreso.
         try{
@@ -182,13 +180,57 @@ public class clsQuerys {
         ps.setString(2, v.getNIT());
         ps.setString(3, v.getNOMBRE());
         ps.setString(4, v.getDIRECCION());
-        ps.setInt(5, v.getMONTO_TOTAL());
+        ps.setDouble(5, v.getMONTO_TOTAL());
         ps.setInt(6, v.getCANTIDAD_PRODUCTOS());
         ps.setString(7, v.getESTATUS());
         ps.execute();
         }catch (SQLException e){
             System.out.println(e.toString());
         }
+        return r;
+    }
+    public clsProducto BuscarPro(int COD_PRODUTO){
+        PreparedStatement ps;
+        ResultSet rs = null;
+        clsProducto producto = new clsProducto();
+        String sql = "SELECT * FROM TB_INVENTARIO WHERE COD_PRODUTO = ?";
+        try{
+            Connection Con = clsConexion.getConexion(); 
+            ps = Con.prepareStatement(sql);
+            ps.setInt(1, COD_PRODUTO);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                producto.setNombre(rs.getString("PRODUCTO"));
+                producto.setPrecio(rs.getDouble("Precio"));
+                producto.setCantidad(rs.getInt("Cantidad"));
+            }
+        }catch(SQLException e){
+            System.out.println(e.toString());
+        }
+        return producto;
+    }
+    public int RegistrarDetalle(clsDetalle Dv){
+        PreparedStatement ps;
+        int r = 0;
+        ResultSet rs = null;
+        String sql = "INSERT INTO TB_DETALLE_VENTA (COD_PRODUTO,CANTIDAD,PRECIO, FACTURA)VALUES(?,?,?,?)";
+        try{
+            Connection Con = clsConexion.getConexion();
+            ps = Con.prepareStatement(sql);
+            ps.setInt(1, Dv.getCOD_PRODUTO());
+            ps.setInt(2, Dv.getCANTIDAD());
+            ps.setDouble(3, Dv.getPRECIO());
+            ps.setInt(4, Dv.getFACTURA());
+            ps.execute();
+        }catch(SQLException e){
+            System.out.println(e.toString());
+        }/*finally{
+            try{
+                
+            }catch(Exception e){   
+                System.out.println(e.toString());
+            }
+        }*/
         return r;
     }
 }

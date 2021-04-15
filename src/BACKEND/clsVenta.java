@@ -20,7 +20,7 @@ public class clsVenta {
     private String NIT;
     private String NOMBRE;
     private String DIRECCION;
-    private int MONTO_TOTAL;
+    private double MONTO_TOTAL;
     private int CANTIDAD_PRODUCTOS;
     private String ESTATUS;
     
@@ -79,11 +79,11 @@ public class clsVenta {
         this.DIRECCION = DIRECCION;
     }
 
-    public int getMONTO_TOTAL() {
+    public double getMONTO_TOTAL() {
         return MONTO_TOTAL;
     }
 
-    public void setMONTO_TOTAL(int MONTO_TOTAL) {
+    public void setMONTO_TOTAL(double MONTO_TOTAL) {
         this.MONTO_TOTAL = MONTO_TOTAL;
     }
 

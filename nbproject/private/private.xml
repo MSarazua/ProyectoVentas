@@ -4,9 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/FRONTEND/frmInventario.java</file>
-            <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/FRONTEND/frmLogin.java</file>
+            <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/BACKEND/clsDetalle.java</file>
+            <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/DATA/clsConexion.java</file>
             <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/FRONTEND/frmVenta.java</file>
+            <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/BACKEND/clsProducto.java</file>
             <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/DATA/clsQuerys.java</file>
+            <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/BACKEND/clsPersonas.java</file>
+            <file>file:/C:/Users/MSarazua/Documents/NetBeansProjects/ProyectoVentas/src/BACKEND/clsVenta.java</file>
         </group>
     </open-files>
 </project-private>
