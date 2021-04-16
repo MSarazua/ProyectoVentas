@@ -5,7 +5,7 @@
  */
 package DATA;
 import BACKEND.clsPersonas;
-
+import BACKEND.clsClientes;
 import BACKEND.clsDetalle;
 import BACKEND.clsProducto;
 import BACKEND.clsVenta;
@@ -44,8 +44,7 @@ public class clsQuerys {
         }
 
         return Resp;
-    }  
-    
+    }    
     public int fncIngresoPersona(String pNombre ,String pApellido,char pSexo, int  pTIPO_PERSONA , String pUSUARIO, String pPASS)
     {
         int Resp = 0;
@@ -291,13 +290,122 @@ public class clsQuerys {
             ps.execute();
         }catch(SQLException e){
             System.out.println(e.toString());
-        }/*finally{
-            try{
-                
-            }catch(Exception e){   
-                System.out.println(e.toString());
-            }
-        }*/
+        }
         return r;
     }
+    
+    public int IdVenta(){
+        int FACTURA = 0;
+        PreparedStatement ps;
+        ResultSet rs = null;
+        String sql = "SELECT MAX(FACTURA) FROM TB_VENTA";
+        try{
+            Connection Con = clsConexion.getConexion();
+            ps = Con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if((rs.next())){
+                FACTURA = rs.getInt(1);
+            }
+        }catch(SQLException e){
+            System.out.println(e.toString());
+        }
+        return FACTURA; 
+    }
+    public boolean ActualizarStock(int cant, int cod){
+        PreparedStatement ps;
+        String sql = "UPDATE TB_INVENTARIO SET CANTIDAD = ? WHERE COD_PRODUTO = ?";
+        try{
+            Connection Con = clsConexion.getConexion();
+            ps = Con.prepareStatement(sql);
+            ps.setInt(1, cant);
+            ps.setInt(2, cod);
+            ps.execute();
+            return true;
+        }catch(SQLException e){
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+    
+    
+    /**
+    *Funciones para CRUD DE CLIENTES
+    */
+    //CREATE CLIENTES
+     public int fncIngresoCliente( String clNombre, String clDescripcion, int clNIT){
+        int retorno=0; 
+        try{
+            Connection Con = clsConexion.getConexion();
+            String consulta = "INSERT INTO TB_CLIENTES (NOMBRE,DESCRIPCION,NIT) VALUES (?,?,?)";
+            PreparedStatement P = Con.prepareStatement(consulta);
+            P.setString(1, clNombre);
+            P.setString(2, clDescripcion);
+            P.setInt(3, clNIT);
+            P.executeUpdate();
+            retorno = 1;
+            
+        }catch(SQLException Ex){
+            System.out.println(Ex.getMessage());
+        }
+        return retorno;
+    }
+     //READ CLIENTES
+      public ResultSet fncConsultaCliente(int pCodigo){
+        ResultSet rs = null;
+        try{
+            Connection Con = clsConexion.getConexion();  //CONEXION
+            String consulta = "SELECT ID, NOMBRE, DESCRIPCION, NIT FROM TB_CLIENTES";
+            if(pCodigo != 0){
+                consulta = consulta + " WHERE ID =" + pCodigo;
+            }
+            PreparedStatement ps = Con.prepareStatement(consulta);
+            rs = ps.executeQuery();
+            
+            
+        }catch(SQLException Ex){
+            System.out.println(Ex.getMessage());
+        } 
+        
+        
+        return rs;
+    }
+    //UPDATE CLIENTES
+    public int fncModificaCliente( clsClientes objPersona){
+        int Resp=0; // 0 no se ingreso.
+        try{
+            Connection Con = clsConexion.getConexion();  //CONEXION A BD
+            String consulta = "UPDATE TB_CLIENTES SET NOMBRE = ?,DESCRIPCION = ?,NIT = ? WHERE ID = ?";
+            PreparedStatement ps = Con.prepareStatement(consulta);
+            ps.setString(1, objPersona.getNOMBRE());
+            ps.setString(2, objPersona.getDESCRIPCION());
+            ps.setInt(4, objPersona.getNIT());  
+            ps.setInt(7, objPersona.getID());
+            ps.executeUpdate(); //EJECUTA LA SENTENCIA EN LA BASE DE DATOS
+            Resp = 1;
+            
+        }catch(SQLException Ex){
+            System.out.println(Ex.getMessage());
+        }
+        return Resp;
+    }
+    //DELETE CLIENTES
+    public int fncEliminaCliente(int pId){
+        int Resp=0; // 0 no se ingreso.
+        try{
+            Connection Con = clsConexion.getConexion();  //CONEXION A BD
+            String consulta = "DELETE FROM TB_CLIENTES WHERE ID = " + pId;
+            PreparedStatement ps = Con.prepareStatement(consulta);
+                 
+            ps.executeUpdate(); //EJECUTA LA SENTENCIA EN LA BASE DE DATOS
+            Resp = 1;
+            
+        }catch(SQLException Ex){
+            System.out.println(Ex.getMessage());
+        }
+        return Resp;
+    }
+    
+   
+    
 }
+ 
