@@ -14,8 +14,8 @@ import java.sql.SQLException;
  */
 public class clsConexion {
     public static Connection getConexion(){
-        String Conexion = "jdbc:sqlserver://localhost:1433;databaseName=BD_UMG; "
-                + "user=USR_UMG; password=umg123; loginTimeout=30";
+        String Conexion = "jdbc:sqlserver://172.17.0.2:1433;databaseName=BD_UMG; "
+                + "user=sa; password=my-secret-pw; loginTimeout=30";
         try{
             Connection con = DriverManager.getConnection(Conexion);
             return con;
