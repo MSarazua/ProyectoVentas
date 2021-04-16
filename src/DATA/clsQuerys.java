@@ -43,8 +43,7 @@ public class clsQuerys {
         }
 
         return Resp;
-    }  
-    
+    }    
     public int fncIngresoPersona(String pNombre ,String pApellido,char pSexo, int  pTIPO_PERSONA , String pUSUARIO, String pPASS)
     {
         int Resp = 0;
@@ -224,13 +223,41 @@ public class clsQuerys {
             ps.execute();
         }catch(SQLException e){
             System.out.println(e.toString());
-        }/*finally{
-            try{
-                
-            }catch(Exception e){   
-                System.out.println(e.toString());
-            }
-        }*/
+        }
         return r;
     }
+    
+    public int IdVenta(){
+        int FACTURA = 0;
+        PreparedStatement ps;
+        ResultSet rs = null;
+        String sql = "SELECT MAX(FACTURA) FROM TB_VENTA";
+        try{
+            Connection Con = clsConexion.getConexion();
+            ps = Con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if((rs.next())){
+                FACTURA = rs.getInt(1);
+            }
+        }catch(SQLException e){
+            System.out.println(e.toString());
+        }
+        return FACTURA; 
+    }
+    public boolean ActualizarStock(int cant, int cod){
+        PreparedStatement ps;
+        String sql = "UPDATE TB_INVENTARIO SET CANTIDAD = ? WHERE COD_PRODUTO = ?";
+        try{
+            Connection Con = clsConexion.getConexion();
+            ps = Con.prepareStatement(sql);
+            ps.setInt(1, cant);
+            ps.setInt(2, cod);
+            ps.execute();
+            return true;
+        }catch(SQLException e){
+            System.out.println(e.toString());
+            return false;
+        }
+    }
 }
+ 
