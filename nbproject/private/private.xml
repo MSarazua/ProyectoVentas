@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/geovanni/NetBeansProjects/ProyectoVentas/src/FRONTEND/frmVenta.java</file>
+            <file>file:/home/geovanni/NetBeansProjects/ProyectoVentas/src/FRONTEND/frmCliente.java</file>
+            <file>file:/home/geovanni/NetBeansProjects/ProyectoVentas/src/DATA/clsQuerys.java</file>
+            <file>file:/home/geovanni/NetBeansProjects/ProyectoVentas/src/FRONTEND/frmVerUser.java</file>
+            <file>file:/home/geovanni/NetBeansProjects/ProyectoVentas/src/BACKEND/clsClientes.java</file>
         </group>
     </open-files>
 </project-private>

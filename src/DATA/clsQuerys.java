@@ -330,17 +330,19 @@ public class clsQuerys {
     
     /**
     *Funciones para CRUD DE CLIENTES
+     * @param objCliente
+     * @return 
     */
     //CREATE CLIENTES
-     public int fncIngresoCliente( String clNombre, String clDescripcion, int clNIT){
+    public int fncIngresoCliente( clsClientes objCliente  ){
         int retorno=0; 
         try{
             Connection Con = clsConexion.getConexion();
-            String consulta = "INSERT INTO TB_CLIENTES (NOMBRE,DESCRIPCION,NIT) VALUES (?,?,?)";
+            String consulta = "INSERT INTO TB_CLIENTES (NOMBRE,DIRECCION,NIT) VALUES (?,?,?)";
             PreparedStatement P = Con.prepareStatement(consulta);
-            P.setString(1, clNombre);
-            P.setString(2, clDescripcion);
-            P.setInt(3, clNIT);
+            P.setString(1, objCliente.getNOMBRE());
+            P.setString(2, objCliente.getDIRECCION());
+            P.setInt(3, objCliente.getNIT());    
             P.executeUpdate();
             retorno = 1;
             
@@ -349,18 +351,17 @@ public class clsQuerys {
         }
         return retorno;
     }
-     //READ CLIENTES
-      public ResultSet fncConsultaCliente(int pCodigo){
+    //READ CLIENTES
+      public ResultSet fncConsultaCliente(int pID){
         ResultSet rs = null;
         try{
             Connection Con = clsConexion.getConexion();  //CONEXION
-            String consulta = "SELECT ID, NOMBRE, DESCRIPCION, NIT FROM TB_CLIENTES";
-            if(pCodigo != 0){
-                consulta = consulta + " WHERE ID =" + pCodigo;
+            String consulta = "SELECT ID, NOMBRE, DIRECCION, NIT FROM TB_CLIENTES";
+            if(pID != 0){
+                consulta = consulta + " WHERE ID =" + pID;
             }
             PreparedStatement ps = Con.prepareStatement(consulta);
             rs = ps.executeQuery();
-            
             
         }catch(SQLException Ex){
             System.out.println(Ex.getMessage());
@@ -374,12 +375,12 @@ public class clsQuerys {
         int Resp=0; // 0 no se ingreso.
         try{
             Connection Con = clsConexion.getConexion();  //CONEXION A BD
-            String consulta = "UPDATE TB_CLIENTES SET NOMBRE = ?,DESCRIPCION = ?,NIT = ? WHERE ID = ?";
+            String consulta = "UPDATE TB_CLIENTES SET NOMBRE = ?,DIRECCION = ?,NIT = ? WHERE ID = ?";
             PreparedStatement ps = Con.prepareStatement(consulta);
             ps.setString(1, objPersona.getNOMBRE());
-            ps.setString(2, objPersona.getDESCRIPCION());
-            ps.setInt(4, objPersona.getNIT());  
-            ps.setInt(7, objPersona.getID());
+            ps.setString(2, objPersona.getDIRECCION());
+            ps.setInt(3, objPersona.getNIT());  
+            ps.setInt(4, objPersona.getID());
             ps.executeUpdate(); //EJECUTA LA SENTENCIA EN LA BASE DE DATOS
             Resp = 1;
             

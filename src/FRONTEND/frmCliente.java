@@ -5,27 +5,13 @@
  */
 package FRONTEND;
 
-
-import BACKEND.clsClientes;
-import BACKEND.clsDetalle;
-import BACKEND.clsProducto;
-import BACKEND.clsVenta;
 import DATA.clsQuerys;
-import java.awt.Image;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JTable;
-import java.awt.event.KeyEvent;
-import javax.swing.JOptionPane;
-import java.lang.Object;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import javax.swing.table.AbstractTableModel;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import BACKEND.clsClientes;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author geovanni
@@ -37,21 +23,48 @@ public class frmCliente extends javax.swing.JFrame {
      */
     public frmCliente() {
         initComponents();
-        initComponents();
-        //ImageIcon imagen = new ImageIcon ("src/img/fondo.jpg");
-        //Icon icono = new ImageIcon(imagen.getImage().getScaledInstance(lblEncabezado.getWidth(), lblEncabezado.getHeight(), Image.SCALE_DEFAULT));
-        //lblEncabezado.setIcon(icono);
-        //this.repaint();
         Limpiar();
-        ctID.setVisible(false);
+        ctId.setVisible(false);
     }
-    public void Limpiar(){
-        ctID.setText("");
+   
+    private void Limpiar(){
         ctNombre.setText("");
+        ctNit.setText("");
         ctDireccion.setText("");
-        ctNIT.setText("");
-        CargarClientes();
+        ctId.setText("");
+        CargarPersonas();
     }
+    private void CargarPersonas(){
+        
+        DefaultTableModel modeloTabla =  (DefaultTableModel)tbPersonas.getModel();
+        modeloTabla.setRowCount(0); //ELIMINO FILAS
+        ResultSet rs;  //BD
+        ResultSetMetaData rsmd;  // TABLA
+        int Columnas;
+        try{
+                    
+            clsQuerys objBD = new clsQuerys();
+            rs = objBD.fncConsultaCliente(0);
+            rsmd = rs.getMetaData();
+            Columnas = rsmd.getColumnCount();
+            
+            while(rs.next()){
+                Object[] fila = new Object[Columnas];
+                for(int indice = 0; indice < Columnas; indice ++){
+                    fila[indice] = rs.getObject(indice + 1 );
+                }
+                modeloTabla.addRow(fila);
+                
+            }
+                    
+                    
+        }catch(SQLException e){
+            System.out.println(e.toString());
+        }
+        
+        
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -63,22 +76,22 @@ public class frmCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbClientes = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
+        tbPersonas = new javax.swing.JTable();
         ctNombre = new javax.swing.JTextField();
-        ctID = new javax.swing.JTextField();
-        ctDireccion = new javax.swing.JTextField();
-        ctNIT = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        ctNit = new javax.swing.JTextField();
+        ctDireccion = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        btnModificar = new javax.swing.JButton();
+        ctId = new javax.swing.JTextField();
         btnEliminar = new javax.swing.JButton();
-        btnInsertar = new javax.swing.JButton();
-        btnRecargar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnCrear = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tbClientes.setModel(new javax.swing.table.DefaultTableModel(
+        tbPersonas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -86,7 +99,7 @@ public class frmCliente extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "ID", "NOMBRE", "DESCRIPCION", "NIT"
+                "ID", "NOMBRE", "DIRECCION", "NIT"
             }
         ) {
             Class[] types = new Class [] {
@@ -104,16 +117,25 @@ public class frmCliente extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tbClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+        tbPersonas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbClientesMouseClicked(evt);
+                tbPersonasMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tbClientes);
+        jScrollPane1.setViewportView(tbPersonas);
+
+        ctNombre.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        ctNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ctNombreActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("NOMBRE:");
 
-        ctNombre.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel4.setText("NIT");
+
+        ctNit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         ctDireccion.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         ctDireccion.addActionListener(new java.awt.event.ActionListener() {
@@ -122,18 +144,7 @@ public class frmCliente extends javax.swing.JFrame {
             }
         });
 
-        ctNIT.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-
-        jLabel4.setText("NIT:");
-
-        jLabel5.setText("DIRECCION");
-
-        btnModificar.setText("MODIFICAR");
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
-            }
-        });
+        jLabel5.setText("DIRECCION:");
 
         btnEliminar.setText("ELIMINAR");
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -142,17 +153,24 @@ public class frmCliente extends javax.swing.JFrame {
             }
         });
 
-        btnInsertar.setText("INSERTAR");
-        btnInsertar.addActionListener(new java.awt.event.ActionListener() {
+        btnModificar.setText("MODIFICAR");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInsertarActionPerformed(evt);
+                btnModificarActionPerformed(evt);
             }
         });
 
-        btnRecargar.setText("RECARGAR");
-        btnRecargar.addActionListener(new java.awt.event.ActionListener() {
+        btnCrear.setText("CREAR");
+        btnCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRecargarActionPerformed(evt);
+                btnCrearActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("MENU");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -163,163 +181,97 @@ public class frmCliente extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addGap(49, 49, 49)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(ctNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(46, 46, 46)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGap(312, 312, 312)
-                                                .addComponent(ctID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(44, 44, 44))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addGap(45, 45, 45)
-                                                .addComponent(ctDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addComponent(ctNIT, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(ctNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(163, 163, 163)
+                                .addComponent(ctId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(69, 69, 69)
-                                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(58, 58, 58)
-                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(102, 102, 102)
-                                .addComponent(btnRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(27, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ctDireccion)
+                                    .addComponent(ctNit, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
+                                .addGap(108, 108, 108)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 771, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)
+                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(66, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(ctNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(ctID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ctDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))))
-                .addGap(18, 18, 18)
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ctNIT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(46, 46, 46)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnRecargar)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnEliminar)
-                        .addComponent(btnInsertar)
-                        .addComponent(btnModificar)))
+                    .addComponent(jLabel3)
+                    .addComponent(ctNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ctId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(ctNit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(ctDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(57, 57, 57)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEliminar)
+                    .addComponent(btnModificar)
+                    .addComponent(btnCrear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(98, 98, 98))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void CargarClientes(){
-        
-        DefaultTableModel modeloTabla =  (DefaultTableModel)tbClientes.getModel();
-        modeloTabla.setRowCount(0); //ELIMINO FILAS
-        
-        ResultSet rs;  //BD
-        ResultSetMetaData rsmd;  // TABLA
-        int Columnas;
-        
-        
+
+    private void tbPersonasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbPersonasMouseClicked
         try{
-                    
-            clsQuerys objBD = new clsQuerys();
-            rs = objBD.fncConsultaCliente(0);
-            rsmd = rs.getMetaData();
-            Columnas = rsmd.getColumnCount();
-            
-            while(rs.next()){
-                Object[] fila = new Object[Columnas];
-                for(int indice = 0; indice < Columnas; indice ++){
-                    fila[indice] = rs.getObject(indice + 1 );
-                }
-                modeloTabla.addRow(fila);
-            }
-        }catch(SQLException e){
-            System.out.println(e.toString());
-        }
-        
-        
-    }
-    
-    private void tbClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbClientesMouseClicked
-        try{
-            int fila = tbClientes.getSelectedRow();
-            int Codigo =   Integer.parseInt(  tbClientes.getValueAt(fila, 0).toString()    )  ;
+            int fila = tbPersonas.getSelectedRow();
+            int ID =   Integer.parseInt(  tbPersonas.getValueAt(fila, 0).toString()    )  ;
             ResultSet rs;
             clsQuerys objBD = new clsQuerys();
-            rs = objBD.fncConsultaCliente(Codigo);
+            rs = objBD.fncConsultaCliente(ID);
 
             while(rs.next()){
-                ctID.setText(    rs.getString("ID")     );
+                ctId.setText(rs.getString("ID")    );
                 ctNombre.setText( rs.getString("NOMBRE")  );
-                ctDireccion.setText( rs.getString("USUARIO")  );
-                ctNIT.setText( rs.getString("NIT") );
+                ctNit.setText( rs.getString("NIT")  );
+                ctDireccion.setText( rs.getString("DIRECCION")  );
             }
-            JOptionPane.showMessageDialog(this,  String.valueOf(Codigo)    );
+            JOptionPane.showMessageDialog(this,  String.valueOf(ID)    );
         }catch(Exception Ex){
             System.out.println( Ex.getMessage());
         }
-    }//GEN-LAST:event_tbClientesMouseClicked
+    }//GEN-LAST:event_tbPersonasMouseClicked
 
     private void ctDireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctDireccionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ctDireccionActionPerformed
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-
-        if(fncValidaFormulario()==1){
-            if(ctID.getText().equals("")){
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un registro para actualizar");
-            }else{
-                clsClientes objCliente = new clsClientes();
-                objCliente.setID(Integer.valueOf(  ctID.getText()    ) );
-
-                objCliente.setNOMBRE(  ctNombre.getText()   );
-                objCliente.setDESCRIPCION(  ctDireccion.getText()   );
-                 objCliente.setNIT(Integer.valueOf(  ctNIT.getText()    ) );
-                
-
-                clsQuerys objBD = new clsQuerys();  //CREA UN INSTANCIA
-
-                if(  objBD.fncModificaCliente(objCliente)==1){
-                    JOptionPane.showMessageDialog(this, "Registro fue Actualizado.");
-                    CargarClientes();
-                    Limpiar();
-                }else{
-                    JOptionPane.showMessageDialog(this, "Registro NO Ingresado.");
-                }
-            }
-        }
-
-    }//GEN-LAST:event_btnModificarActionPerformed
-
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         clsQuerys objBD = new clsQuerys();
-        if(ctID.getText().equals("")){
+        if(ctId.getText().equals("")){
             JOptionPane.showMessageDialog(this, "Debe seleccionar un registro para eliminar");
         }else{
-            if (    objBD.fncEliminaPersona( Integer.valueOf(  ctID.getText()    ) ) ==1 ){
+            if (    objBD.fncEliminaCliente(Integer.valueOf(  ctId.getText()    ) ) ==1 ){
                 JOptionPane.showMessageDialog(this, "Se eliminó correctamente el registro.");
-                CargarClientes();
+                CargarPersonas();
                 Limpiar();
 
             }
@@ -327,32 +279,83 @@ public class frmCliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void btnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnInsertarActionPerformed
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
 
-    private void btnRecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRecargarActionPerformed
+        if(fncValidaFormulario()==1){
+            if(ctId.getText().equals("")){
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un registro para actualizar");
+            }else{
+                clsClientes objPersona = new clsClientes();
+                objPersona.setID(Integer.valueOf(  ctId.getText()    ) );
+                objPersona.setNOMBRE(  ctNombre.getText()   );
+                objPersona.setNIT(Integer.valueOf(  ctNit.getText()  ) );
+                objPersona.setDIRECCION(  ctDireccion.getText()   );
 
-    
+               
+
+                clsQuerys objBD = new clsQuerys();  //CREA UN INSTANCIA
+
+                if(  objBD.fncModificaCliente(objPersona)==1){
+                    JOptionPane.showMessageDialog(this, "Registro fue Actualizado.");
+                    CargarPersonas();
+                    Limpiar();
+                }else{
+                    JOptionPane.showMessageDialog(this, "Registro NO Ingresado.");
+                }
+            }
+        }
+        
+
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void ctNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ctNombreActionPerformed
+
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        // TODO add your handling code here:
+         if(fncValidaFormulario()==1){
+            clsClientes objCliente = new clsClientes();
+
+            objCliente.setNOMBRE(  ctNombre.getText()   );
+            objCliente.setDIRECCION(  ctDireccion.getText()   );
+            objCliente.setNIT(Integer.valueOf( ctNit.getText()));
+     
+        
+
+             clsQuerys objInsertar = new clsQuerys();  //CREA UN INSTANCIA
+
+             if(  objInsertar.fncIngresoCliente(objCliente)==1){
+                    JOptionPane.showMessageDialog(this, "PRODUCTO REGISTRADO.");
+                     CargarPersonas();
+                     Limpiar();
+                    
+             }else{
+                    JOptionPane.showMessageDialog(this, "PRODUCTO NO REGISTRADO.");   
+             }
+            }
+    }//GEN-LAST:event_btnCrearActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        frmInicio fi = new frmInicio();
+        fi.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+      
     private int fncValidaFormulario(){
         int Resp =0;
         if( ctNombre.getText().equals("") ){
-            JOptionPane.showMessageDialog(this, "Debe ingresar el nombre de la persona.");
+                  JOptionPane.showMessageDialog(this, "Debe ingresar el nombre de la persona.");
         }else{
-            if (ctNIT.getText().equals("")){
-                JOptionPane.showMessageDialog(this, "Debe ingresar el usuario de la persona."); 
+            if(ctNit.getText().equals("")){
+                 JOptionPane.showMessageDialog(this, "Debe ingresar el nit de la persona.");
             }else{
-                if (ctDireccion.getText().equals("")){
-                    JOptionPane.showMessageDialog(this, "Debe ingresar el password de la persona."); 
-                }else{
-                    if (ctID.getText().equals("")){
-                        JOptionPane.showMessageDialog(this, "Debe confirmar el password de la persona.");
-                    }else{
-                         Resp =1;
-                    }
-                }
+                 if (ctDireccion.getText().equals("")){
+                      JOptionPane.showMessageDialog(this, "Debe ingresar la direccion de la persona.");
+                 }else{
+                     Resp =1;
+                 } 
             }
         }
         
@@ -395,18 +398,18 @@ public class frmCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnInsertar;
     private javax.swing.JButton btnModificar;
-    private javax.swing.JButton btnRecargar;
     private javax.swing.JTextField ctDireccion;
-    private javax.swing.JTextField ctID;
-    private javax.swing.JTextField ctNIT;
+    private javax.swing.JTextField ctId;
+    private javax.swing.JTextField ctNit;
     private javax.swing.JTextField ctNombre;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tbClientes;
+    private javax.swing.JTable tbPersonas;
     // End of variables declaration//GEN-END:variables
 }

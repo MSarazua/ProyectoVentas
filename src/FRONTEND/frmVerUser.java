@@ -46,7 +46,7 @@ public class frmVerUser extends javax.swing.JFrame {
     
     
 
-    public void Limpiar(){
+    private void Limpiar(){
         ctNombre.setText("");
         ctApellido.setText("");
         ctUsuario.setText("");
@@ -57,7 +57,7 @@ public class frmVerUser extends javax.swing.JFrame {
         this.setSexo("");
         ctCodigo.setText("");
     }
-     private void CargarPersonas(){
+    private void CargarPersonas(){
         
         DefaultTableModel modeloTabla =  (DefaultTableModel)tbPersonas.getModel();
         modeloTabla.setRowCount(0); //ELIMINO FILAS

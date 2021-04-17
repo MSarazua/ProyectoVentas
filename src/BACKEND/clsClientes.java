@@ -16,7 +16,7 @@ public class clsClientes {
     
     private int ID;
     private String NOMBRE;
-    private String DESCRIPCION;
+    private String DIRECCION;
     private int NIT;
 
     public int getID() {
@@ -35,12 +35,12 @@ public class clsClientes {
         this.NOMBRE = NOMBRE;
     }
 
-    public String getDESCRIPCION() {
-        return DESCRIPCION;
+    public String getDIRECCION() {
+        return DIRECCION;
     }
 
-    public void setDESCRIPCION(String DESCRIPCION) {
-        this.DESCRIPCION = DESCRIPCION;
+    public void setDIRECCION(String DIRECCION) {
+        this.DIRECCION = DIRECCION;
     }
 
     public int getNIT() {

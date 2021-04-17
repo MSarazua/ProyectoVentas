@@ -47,6 +47,13 @@ public class frmLogin extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/login.png"))); // NOI18N
 
+        ctUsuario.setText("Gramirez");
+        ctUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ctUsuarioActionPerformed(evt);
+            }
+        });
+
         jLabel1.setFont(new java.awt.Font("Yu Gothic", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("INICIO DE SESIÓN");
@@ -62,7 +69,7 @@ public class frmLogin extends javax.swing.JFrame {
 
         ctTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", " " }));
 
-        ctPass.setText("password");
+        ctPass.setText("1234");
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -145,6 +152,10 @@ public class frmLogin extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "El usuario no existe");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void ctUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ctUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ctUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
